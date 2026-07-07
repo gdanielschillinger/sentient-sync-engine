@@ -94,7 +94,22 @@ Reference: [OWASP Top 10 for LLM Applications v1.1](https://owasp.org/www-projec
 
 ## Stack
 
-`Python` · `LangGraph` · `Gemini 2.5 Pro` · `Next.js` · `TypeScript` · `Ed25519` · `Kyber-768 / ML-KEM-768` · `Vercel`
+`Python` · `LangGraph` · `Gemini 2.5 Pro` · `Next.js` · `TypeScript` · `Ed25519` · `Kyber-768 / ML-KEM-768` · `Docker` · `Kubernetes` · `Vercel`
+
+---
+
+## Security posture — container and orchestration substrate
+
+The engine (private repo) is designed to run as a hardened container on Kubernetes. This is the deployment substrate the cryptographic layer sits on top of — capability boundaries at the runtime layer, cryptographic boundaries at the state layer.
+
+| Layer | Posture |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| **Container** | Distroless base image, non-root user, read-only root filesystem, seccomp default profile, signed images verified at admission. |
+| **Kubernetes** | Pod Security Standards (restricted), per-workload RBAC least-privilege, NetworkPolicy egress allowlists, admission-controller policies blocking privileged pods and unsigned images. |
+| **Runtime** | Syscall-level anomaly detection; secrets brokered as short-lived credentials rather than static environment variables. |
+| **Agent** | LLM tool-use sandboxing, capability-scoped credentials per agent, multi-model orchestration for cross-model consensus on high-stakes actions. |
+
+**On scope.** This section describes the deployment posture the engine is built for. Container manifests and admission policies live in the engine repo and open in stages alongside the cryptographic code, on the same evidence-first schedule described below.
 
 ---
 
